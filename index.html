@@ -16,7 +16,6 @@
       --shadow: 0 10px 22px rgba(17,24,39,.08);
 
       --brand: #2563eb;     /* calm blue */
-      --brand-2: #1d4ed8;
       --danger: #dc2626;
       --ok: #059669;
 
@@ -34,7 +33,6 @@
       --shadow: 0 14px 34px rgba(0,0,0,.35);
 
       --brand: #4f8cff;
-      --brand-2: #3b82f6;
       --danger: #ff5c7a;
       --ok: #2ee59d;
     }
@@ -48,7 +46,6 @@
       min-height:100vh;
     }
 
-    /* Header */
     header{
       position:sticky; top:0; z-index:10;
       background: color-mix(in srgb, var(--bg) 85%, transparent);
@@ -156,7 +153,6 @@
 
     main{ padding: 18px 0 120px; } /* space for bottom bar */
 
-    /* Product grid */
     .grid{
       display:grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -249,7 +245,6 @@
       letter-spacing:.2px;
     }
 
-    /* Bottom totals bar */
     .bottom{
       position:fixed;
       left:0; right:0; bottom:0;
@@ -356,7 +351,6 @@
     }
     .small{ color: var(--muted); font-size: 12px; }
 
-    /* Better focus */
     button:focus, a:focus, input:focus{
       outline: 3px solid color-mix(in srgb, var(--brand) 35%, transparent);
       outline-offset: 2px;
@@ -377,7 +371,6 @@
           <input id="search" type="text" placeholder="Search items…"/>
         </div>
 
-        <!-- Light/Dark Toggle -->
         <div class="toggle" id="themeToggle" title="Toggle light/dark mode" role="button" tabindex="0">
           <span id="themeLabel">Light</span>
           <span class="dot"><span class="knob"></span></span>
@@ -394,7 +387,6 @@
     </div>
   </main>
 
-  <!-- Bottom totals bar -->
   <div class="bottom">
     <div class="wrap">
       <div class="totals">
@@ -419,7 +411,6 @@
     </div>
   </div>
 
-  <!-- Checkout Modal / Sheet -->
   <div class="modal" id="modal">
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
       <header>
@@ -499,7 +490,6 @@
       if(saved){
         applyTheme(saved);
       } else {
-        // default light; optionally respect system preference
         const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
         applyTheme(prefersDark ? "dark" : "light");
       }
@@ -552,7 +542,7 @@
           totalItems += q;
         }
       }
-      const total = subtotal; // no extra fees
+      const total = subtotal;
       return { subtotal, total, totalItems };
     }
 
@@ -665,6 +655,7 @@
         .forEach(p => grid.appendChild(productCard(p)));
     }
 
+    // Totals lines are FULL-LINE BOLD for WhatsApp, e.g. *TOTAL: UGX 125,000*
     function buildOrderMessage(){
       const lines = [];
       lines.push("BEAVERTAIL MINI-MART ORDER");
@@ -681,10 +672,11 @@
       }
 
       lines.push("--------------------------------");
-      lines.push(`Subtotal: UGX ${formatUGX(subtotal)}`);
-      lines.push(`TOTAL: UGX ${formatUGX(subtotal)}`);
+      lines.push(`*Subtotal: UGX ${formatUGX(subtotal)}*`);
+      lines.push(`*TOTAL: UGX ${formatUGX(subtotal)}*`);
       lines.push("--------------------------------");
       lines.push("Delivery/Pickup: (reply with location & preferred time)");
+
       return lines.join("\n");
     }
 
@@ -693,7 +685,9 @@
       if(totalItems === 0) return;
 
       const msg = buildOrderMessage();
-      orderPreview.textContent = msg;
+
+      // Show bold on review page by converting *text* to <strong>text</strong>
+      orderPreview.innerHTML = msg.replace(/\*(.*?)\*/g, "<strong>$1</strong>");
 
       waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
       emailBtn.href = `mailto:${EMAIL_TO}?subject=${encodeURIComponent("Beavertail Mini-mart Order")}&body=${encodeURIComponent(msg)}`;
