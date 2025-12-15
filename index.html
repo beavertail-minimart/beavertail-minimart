@@ -13,7 +13,7 @@
       --brand:#2563eb; --danger:#dc2626; --ok:#059669;
       --radius:16px;
 
-      /* Added bar colors */
+      /* Colored top/bottom bars */
       --barTop: linear-gradient(90deg, rgba(37,99,235,.18), rgba(5,150,105,.14));
       --barBottom: linear-gradient(90deg, rgba(5,150,105,.14), rgba(37,99,235,.18));
       --barBorder: rgba(37,99,235,.22);
@@ -41,7 +41,7 @@
       touch-action:manipulation;
     }
 
-    /* Fixed header with a bit of color */
+    /* Fixed header */
     header{
       position:fixed; top:0; left:0; right:0; z-index:30;
       background:
@@ -59,13 +59,13 @@
     }
     .title{
       display:flex; flex-direction:column; gap:4px;
-      min-width: 240px;
-      flex: 1 1 260px;
+      min-width:240px;
+      flex:1 1 260px;
     }
     h1{ margin:0; font-size:18px; letter-spacing:.2px; }
     .subtitle{ margin:0; color:var(--muted); font-size:12px; }
 
-    /* Controls row (icons) */
+    /* Controls row */
     .controls{
       display:flex;
       gap:10px;
@@ -79,16 +79,17 @@
     }
 
     .iconbtn{
-      width: 42px; height: 42px;
-      border-radius: 12px;
+      width:42px; height:42px;
+      border-radius:12px;
       border:1px solid var(--border);
       background:var(--surface);
       color:var(--text);
       box-shadow: var(--shadow);
       cursor:pointer;
       display:inline-flex; align-items:center; justify-content:center;
-      font-size: 18px;
+      font-size:18px;
       flex:0 0 auto;
+      user-select:none;
     }
     .iconbtn:active{ transform: translateY(1px); }
 
@@ -161,12 +162,12 @@
     @media (max-width: 640px){
       .wrap{ padding:12px 12px; }
       h1{ font-size:16px; }
-      .iconbtn{ width: 40px; height: 40px; }
+      .iconbtn{ width:40px; height:40px; }
       .toggle{ height:40px; padding:9px 10px; }
       .btn{ padding:9px 10px; }
     }
 
-    /* push content below fixed header */
+    /* Push content below fixed header + space for bottom bar */
     main{ padding: 86px 0 140px; }
 
     .grid{
@@ -199,32 +200,21 @@
       position:relative;
     }
     .imgbox img{ width:100%; height:100%; object-fit:cover; display:block; }
-    .imgbox .fallback{
-      position:absolute; inset:0;
-      display:flex; align-items:center; justify-content:center;
-      color: color-mix(in srgb, var(--muted) 85%, transparent);
-      font-weight:800;
-      text-transform:uppercase;
-      letter-spacing:.3px;
-      font-size:12px;
-      pointer-events:none;
-      padding:10px;
-      text-align:center;
-    }
 
-    /* Checkmark overlay (top-right) */
+    /* Checkmark overlay */
     .check{
       position:absolute;
       top:10px; right:10px;
-      width: 28px; height: 28px;
-      border-radius: 999px;
+      width:28px; height:28px;
+      border-radius:999px;
       background: color-mix(in srgb, var(--surface) 80%, transparent);
       border: 1px solid var(--border);
       display:flex; align-items:center; justify-content:center;
-      font-weight: 1000;
+      font-weight:1000;
       cursor:pointer;
       user-select:none;
       box-shadow: var(--shadow);
+      z-index:5;
     }
     .check[data-checked="true"]{
       background: color-mix(in srgb, var(--ok) 20%, var(--surface));
@@ -276,7 +266,7 @@
       letter-spacing:.2px;
     }
 
-    /* Bottom bar with color */
+    /* Bottom bar */
     .bottom{
       position:fixed;
       left:0; right:0; bottom:0;
@@ -341,14 +331,14 @@
       box-shadow:var(--shadow);
     }
 
-    /* Search modal */
+    /* Modals */
     .modal{
       position:fixed; inset:0; z-index:60;
       background: rgba(0,0,0,.45);
       display:none;
       align-items:flex-end;
       justify-content:center;
-      padding: 14px;
+      padding:14px;
     }
     html[data-theme="dark"] .modal{ background: rgba(0,0,0,.55); }
 
@@ -406,11 +396,11 @@
     .smeta{ color:var(--muted); font-size:12px; margin-top:2px; }
     .sright{ display:flex; align-items:center; gap:10px; }
     .tick{
-      width: 26px; height: 26px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
+      width:26px; height:26px;
+      border-radius:999px;
+      border:1px solid var(--border);
       display:flex; align-items:center; justify-content:center;
-      font-weight: 1000;
+      font-weight:1000;
     }
     .tick.on{
       background: color-mix(in srgb, var(--ok) 20%, var(--surface));
@@ -418,7 +408,6 @@
       color: color-mix(in srgb, var(--ok) 85%, var(--text));
     }
 
-    /* Checkout modal re-used */
     .orderbox{
       background:var(--surface-2);
       border:1px solid var(--border);
@@ -454,7 +443,6 @@
       </div>
 
       <div class="controls">
-        <!-- Search icon opens a search sheet -->
         <button class="iconbtn" id="openSearch" title="Search & tick items" aria-label="Search & tick items">🔎</button>
 
         <div class="toggle" id="themeToggle" title="Toggle light/dark mode" role="button" tabindex="0">
@@ -556,16 +544,17 @@
     const WHATSAPP_NUMBER = "256772844881";
     const EMAIL_TO = "drxpatt@gmail.com";
 
+    // Put images inside an "images/" folder, and name them exactly like the "image" value below.
     const products = [
-      { id: "p1",  name: "Rice (5kg)",           price: 45000, unit: "bag",    image: "rice-5kg.png" },
-      { id: "p2",  name: "Sugar (1kg)",          price: 4500,  unit: "kg",     image: "sugar-1kg.png" },
+      { id: "p1",  name: "Rice (5kg)",           price: 45000, unit: "bag",    image: "rice-5kg.jpg" },
+      { id: "p2",  name: "Sugar (1kg)",          price: 4500,  unit: "kg",     image: "sugar-1kg.jpg" },
       { id: "p3",  name: "Cooking Oil (1L)",     price: 13000, unit: "bottle", image: "cooking-oil-1l.jpg" },
-      { id: "p4",  name: "Bread (Loaf)",         price: 3500,  unit: "loaf",   image: "bread-loaf.png" },
-      { id: "p5",  name: "Milk (500ml)",         price: 2000,  unit: "pack",   image: "milk-500ml.png" },
-      { id: "p6",  name: "Eggs (Tray)",          price: 12000, unit: "tray",   image: "eggs-tray.png" },
+      { id: "p4",  name: "Bread (Loaf)",         price: 3500,  unit: "loaf",   image: "bread-loaf.jpg" },
+      { id: "p5",  name: "Milk (500ml)",         price: 2000,  unit: "pack",   image: "milk-500ml.jpg" },
+      { id: "p6",  name: "Eggs (Tray)",          price: 12000, unit: "tray",   image: "eggs-tray.jpg" },
       { id: "p7",  name: "Salt (1kg)",           price: 2000,  unit: "kg",     image: "salt-1kg.jpg" },
       { id: "p8",  name: "Soap (Bar)",           price: 2500,  unit: "bar",    image: "soap-bar.jpg" },
-      { id: "p9",  name: "Toilet Paper (Roll)",  price: 1500,  unit: "roll",   image: "toilet-paper-roll.png" },
+      { id: "p9",  name: "Toilet Paper (Roll)",  price: 1500,  unit: "roll",   image: "toilet-paper-roll.jpg" },
       { id: "p10", name: "Soda (500ml)",         price: 2000,  unit: "bottle", image: "soda-500ml.jpg" },
       { id: "p11", name: "Maize Flour (2kg)",    price: 7000,  unit: "bag",    image: "maize-flour-2kg.jpg" },
       { id: "p12", name: "Beans (1kg)",          price: 5500,  unit: "kg",     image: "beans-1kg.jpg" }
@@ -609,45 +598,66 @@
       themeLabel.textContent = (theme === "dark") ? "🌙" : "☀️";
       localStorage.setItem("beavertail_theme", theme);
     }
+
     (function initTheme(){
       const saved = localStorage.getItem("beavertail_theme");
-      if(saved) applyTheme(saved);
-      else{
+      if(saved){
+        applyTheme(saved);
+      } else {
         const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
         applyTheme(prefersDark ? "dark" : "light");
       }
     })();
+
     function toggleTheme(){
       const current = document.documentElement.getAttribute("data-theme") || "light";
       applyTheme(current === "dark" ? "light" : "dark");
     }
+
     themeToggle.addEventListener("click", toggleTheme);
     themeToggle.addEventListener("keydown", (e) => {
       if(e.key === "Enter" || e.key === " "){
-        e.preventDefault(); toggleTheme();
+        e.preventDefault();
+        toggleTheme();
       }
     });
 
     // ===== Helpers =====
-    function formatUGX(n){ return new Intl.NumberFormat("en-UG").format(n); }
-    function saveCart(){ localStorage.setItem("beavertail_cart", JSON.stringify(cart)); }
-    function getQty(id){ return Number(cart[id] || 0); }
+    function formatUGX(n){
+      return new Intl.NumberFormat("en-UG").format(n);
+    }
+
+    function saveCart(){
+      localStorage.setItem("beavertail_cart", JSON.stringify(cart));
+    }
+
+    function getQty(id){
+      return Number(cart[id] || 0);
+    }
 
     function setQty(id, qty){
-      if(qty <= 0) delete cart[id];
-      else cart[id] = qty;
+      if(qty <= 0){
+        delete cart[id];
+      } else {
+        cart[id] = qty;
+      }
+
       saveCart();
       renderTotals();
-      // update qty label on card if present
+
+      // Update qty on card
       const el = document.querySelector(`[data-qty="${id}"]`);
       if(el) el.textContent = getQty(id);
-      // update check icon on card if present
+
+      // Update check on card
       const ck = document.querySelector(`[data-check="${id}"]`);
       if(ck) ck.dataset.checked = (getQty(id) > 0) ? "true" : "false";
     }
 
     function computeTotals(){
-      let subtotal = 0, totalItems = 0;
+      let subtotal = 0;
+      let totalItems = 0;
+
       for(const p of products){
         const q = getQty(p.id);
         if(q > 0){
@@ -655,11 +665,13 @@
           totalItems += q;
         }
       }
+
       return { subtotal, total: subtotal, totalItems };
     }
 
     function renderTotals(){
       const { subtotal, total, totalItems } = computeTotals();
+
       subtotalText.textContent = `UGX ${formatUGX(subtotal)}`;
       totalText.textContent = `UGX ${formatUGX(total)}`;
       itemsBadge.textContent = `${totalItems} item${totalItems===1?"":"s"}`;
@@ -676,7 +688,7 @@
       const card = document.createElement("div");
       card.className = "card";
 
-      // checkmark toggle (tick/untick)
+      // Checkmark (tick/untick)
       const check = document.createElement("div");
       check.className = "check";
       check.setAttribute("data-check", p.id);
@@ -690,6 +702,7 @@
       };
       card.appendChild(check);
 
+      // Image area (NO placeholder text)
       const imgbox = document.createElement("div");
       imgbox.className = "imgbox";
 
@@ -697,14 +710,10 @@
       img.alt = p.name;
       img.src = `images/${p.image}`;
 
-      const fallback = document.createElement("div");
-      fallback.className = "fallback";
-      fallback.textContent = "Photo placeholder";
-
-      img.onerror = () => { img.style.display = "none"; fallback.style.display = "flex"; };
+      // If image missing, keep area clean
+      img.onerror = () => { img.style.display = "none"; };
 
       imgbox.appendChild(img);
-      imgbox.appendChild(fallback);
 
       const content = document.createElement("div");
       content.className = "content";
@@ -713,6 +722,7 @@
       top.className = "row";
 
       const left = document.createElement("div");
+
       const nm = document.createElement("div");
       nm.className = "name";
       nm.textContent = p.name;
@@ -784,7 +794,10 @@
       renderSearchResults("");
       setTimeout(() => searchInputModal.focus(), 0);
     }
-    function closeSearch(){ searchModal.style.display = "none"; }
+
+    function closeSearch(){
+      searchModal.style.display = "none";
+    }
 
     function renderSearchResults(filterText){
       const q = (filterText || "").trim().toLowerCase();
@@ -797,12 +810,15 @@
           row.className = "srow";
 
           const left = document.createElement("div");
+
           const nm = document.createElement("div");
           nm.className = "sname";
           nm.textContent = p.name;
+
           const meta = document.createElement("div");
           meta.className = "smeta";
           meta.textContent = `UGX ${formatUGX(p.price)} • Per ${p.unit}`;
+
           left.appendChild(nm);
           left.appendChild(meta);
 
@@ -814,14 +830,13 @@
           tick.textContent = "✓";
 
           right.appendChild(tick);
+
           row.appendChild(left);
           row.appendChild(right);
 
           row.onclick = () => {
             const isOn = getQty(p.id) > 0;
             setQty(p.id, isOn ? 0 : 1);
-
-            // update row tick
             tick.className = "tick" + (getQty(p.id) > 0 ? " on" : "");
           };
 
@@ -829,7 +844,6 @@
         });
     }
 
-    // Clear ticks = remove all items from cart
     function clearTicks(){
       cart = {};
       saveCart();
@@ -843,6 +857,7 @@
       const lines = [];
       lines.push("*Beavertail Mini-Mart Order*");
       lines.push("--------------------------------");
+
       let subtotal = 0;
 
       for(const p of products){
@@ -859,6 +874,7 @@
       lines.push(`*TOTAL: UGX ${formatUGX(subtotal)}*`);
       lines.push("--------------------------------");
       lines.push("Delivery/Pickup: (reply with location & preferred time)");
+
       return lines.join("\n");
     }
 
@@ -868,7 +884,7 @@
 
       const msg = buildOrderMessage();
 
-      // Review page: show the bold title (and totals) via <strong>
+      // Review page: render WhatsApp-style bold via <strong>
       orderPreview.innerHTML = msg.replace(/\*(.*?)\*/g, "<strong>$1</strong>");
 
       waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
@@ -876,7 +892,10 @@
 
       checkoutModal.style.display = "flex";
     }
-    function closeCheckout(){ checkoutModal.style.display = "none"; }
+
+    function closeCheckout(){
+      checkoutModal.style.display = "none";
+    }
 
     // ===== Events =====
     openSearchBtn.addEventListener("click", openSearch);
