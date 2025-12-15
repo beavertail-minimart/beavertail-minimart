@@ -2,62 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <!-- 1) Disable zoom -->
+  <!-- Disable zoom -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Beavertail Mini-Mart Order</title>
   <style>
-    /* ===== Theme tokens (Light default) ===== */
     :root{
-      --bg: #f6f7fb;
-      --surface: #ffffff;
-      --surface-2: #f0f2f8;
-      --text: #111827;
-      --muted: #6b7280;
-      --border: rgba(17,24,39,.12);
-      --shadow: 0 10px 22px rgba(17,24,39,.08);
-
-      --brand: #2563eb;     /* calm blue */
-      --danger: #dc2626;
-      --ok: #059669;
-
-      --radius: 16px;
+      --bg:#f6f7fb; --surface:#fff; --surface-2:#f0f2f8;
+      --text:#111827; --muted:#6b7280;
+      --border:rgba(17,24,39,.12); --shadow:0 10px 22px rgba(17,24,39,.08);
+      --brand:#2563eb; --danger:#dc2626; --ok:#059669;
+      --radius:16px;
     }
-
-    /* Dark theme overrides */
     html[data-theme="dark"]{
-      --bg: #0b1220;
-      --surface: #0f1730;
-      --surface-2: #101a33;
-      --text: #e9eefc;
-      --muted: #a9b3d6;
-      --border: rgba(255,255,255,.14);
-      --shadow: 0 14px 34px rgba(0,0,0,.35);
-
-      --brand: #4f8cff;
-      --danger: #ff5c7a;
-      --ok: #2ee59d;
+      --bg:#0b1220; --surface:#0f1730; --surface-2:#101a33;
+      --text:#e9eefc; --muted:#a9b3d6;
+      --border:rgba(255,255,255,.14); --shadow:0 14px 34px rgba(0,0,0,.35);
+      --brand:#4f8cff; --danger:#ff5c7a; --ok:#2ee59d;
     }
 
     *{ box-sizing:border-box; }
-    html, body{ max-width:100%; overflow-x:hidden; }
+    html,body{ max-width:100%; overflow-x:hidden; }
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background: var(--bg);
-      color: var(--text);
+      background:var(--bg);
+      color:var(--text);
       min-height:100vh;
-      -webkit-text-size-adjust: 100%;
-      touch-action: manipulation;
+      -webkit-text-size-adjust:100%;
+      touch-action:manipulation;
     }
 
+    /* 2) Fixed header (not scrollable) */
     header{
-      position:sticky; top:0; z-index:10;
+      position:fixed; top:0; left:0; right:0; z-index:30;
       background: color-mix(in srgb, var(--bg) 85%, transparent);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
     }
 
-    .wrap{ max-width: 1100px; margin: 0 auto; padding: 14px 16px; }
+    .wrap{ max-width:1100px; margin:0 auto; padding:14px 16px; }
 
     .brandbar{
       display:flex; gap:12px; align-items:center; justify-content:space-between;
@@ -68,11 +51,10 @@
       min-width: 240px;
       flex: 1 1 260px;
     }
-    h1{ margin:0; font-size: 18px; letter-spacing:.2px; }
-    .subtitle{ margin:0; color:var(--muted); font-size: 12px; }
+    h1{ margin:0; font-size:18px; letter-spacing:.2px; }
+    .subtitle{ margin:0; color:var(--muted); font-size:12px; }
 
-    /* 2) Ensure everything fits within screen width adaptively */
-    /* Keep controls in one row but ensure they can shrink without overflow */
+    /* Search + toggle in one row, no wrapping */
     .controls{
       display:flex;
       gap:10px;
@@ -81,53 +63,52 @@
       margin-left:auto;
       flex-wrap:nowrap;
       white-space:nowrap;
-      flex: 0 1 auto;
-      min-width: 0;
-      max-width: 100%;
+      min-width:0;
+      max-width:100%;
     }
 
     .pill{
       display:flex; gap:8px; align-items:center;
-      background: var(--surface);
+      background:var(--surface);
       border:1px solid var(--border);
-      border-radius: 999px;
-      padding: 8px 10px;
-      box-shadow: var(--shadow);
-      flex: 1 1 220px; /* can shrink/grow */
-      min-width: 120px;
-      max-width: 52vw;
+      border-radius:999px;
+      padding:8px 10px;
+      box-shadow:var(--shadow);
+      flex:1 1 220px;
+      min-width:120px;
+      max-width:52vw;
       overflow:hidden;
     }
     .pill input{
       border:none; outline:none; background:transparent; color:var(--text);
-      width: 100%;
-      font-size: 14px;
-      min-width: 0;
+      width:100%;
+      font-size:14px;
+      min-width:0;
     }
     .pill input::placeholder{ color: color-mix(in srgb, var(--muted) 70%, transparent); }
 
     .btn{
       border:none;
-      border-radius: 12px;
-      padding: 10px 12px;
+      border-radius:12px;
+      padding:10px 12px;
       cursor:pointer;
-      color: white;
-      font-weight: 700;
-      background: var(--brand);
-      box-shadow: 0 10px 18px color-mix(in srgb, var(--brand) 20%, transparent);
-      transition: transform .08s ease, filter .15s ease;
+      color:#fff;
+      font-weight:700;
+      background:var(--brand);
+      box-shadow:0 10px 18px color-mix(in srgb, var(--brand) 20%, transparent);
+      transition:transform .08s ease, filter .15s ease;
       white-space:nowrap;
-      flex: 0 0 auto;
+      flex:0 0 auto;
     }
-    .btn:hover{ filter: brightness(1.03); }
-    .btn:active{ transform: translateY(1px); }
+    .btn:hover{ filter:brightness(1.03); }
+    .btn:active{ transform:translateY(1px); }
 
     .btn-ghost{
-      background: var(--surface);
-      color: var(--text);
+      background:var(--surface);
+      color:var(--text);
       border:1px solid var(--border);
-      box-shadow: var(--shadow);
-      font-weight: 700;
+      box-shadow:var(--shadow);
+      font-weight:700;
     }
     .btn-danger{
       background: color-mix(in srgb, var(--danger) 14%, transparent);
@@ -144,135 +125,127 @@
 
     .toggle{
       display:inline-flex; align-items:center; gap:8px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      background: var(--surface);
+      padding:10px 12px;
+      border-radius:12px;
+      background:var(--surface);
       border:1px solid var(--border);
-      box-shadow: var(--shadow);
+      box-shadow:var(--shadow);
       cursor:pointer;
-      font-weight: 900;
-      color: var(--text);
+      font-weight:900;
+      color:var(--text);
       user-select:none;
-      flex: 0 0 auto;
+      flex:0 0 auto;
     }
     .toggle .dot{
-      width: 36px; height: 22px;
-      border-radius: 999px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
+      width:36px; height:22px;
+      border-radius:999px;
+      background:var(--surface-2);
+      border:1px solid var(--border);
       position:relative;
-      flex: 0 0 auto;
+      flex:0 0 auto;
     }
     .toggle .knob{
       position:absolute; top:2px; left:2px;
-      width:18px; height:18px; border-radius: 999px;
-      background: var(--brand);
-      transition: left .18s ease;
+      width:18px; height:18px; border-radius:999px;
+      background:var(--brand);
+      transition:left .18s ease;
     }
-    html[data-theme="dark"] .toggle .knob{ left: 16px; }
+    html[data-theme="dark"] .toggle .knob{ left:16px; }
 
     @media (max-width: 640px){
-      .wrap{ padding: 12px 12px; }
-      .pill{ max-width: 44vw; min-width: 110px; padding: 7px 9px; }
-      .btn, .toggle{ padding: 9px 10px; border-radius: 12px; }
-      h1{ font-size: 16px; }
+      .wrap{ padding:12px 12px; }
+      .pill{ max-width:44vw; min-width:110px; padding:7px 9px; }
+      .btn, .toggle{ padding:9px 10px; }
+      h1{ font-size:16px; }
     }
 
-    main{ padding: 18px 0 120px; } /* space for bottom bar */
+    /* push content below fixed header */
+    main{ padding: 86px 0 120px; } /* header height + bottom bar space */
 
     .grid{
       display:grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
+      gap:14px;
     }
     @media (max-width: 640px){
       .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     .card{
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
       overflow:hidden;
-      box-shadow: var(--shadow);
+      box-shadow:var(--shadow);
       display:flex;
       flex-direction:column;
-      min-height: 260px;
-      min-width: 0;
+      min-height:260px;
+      min-width:0;
     }
 
     .imgbox{
-      height: 128px;
-      background: var(--surface-2);
-      border-bottom: 1px solid var(--border);
+      height:128px;
+      background:var(--surface-2);
+      border-bottom:1px solid var(--border);
       display:flex; align-items:center; justify-content:center;
       position:relative;
     }
-    .imgbox img{
-      width:100%; height:100%;
-      object-fit: cover;
-      display:block;
-    }
+    .imgbox img{ width:100%; height:100%; object-fit:cover; display:block; }
     .imgbox .fallback{
-      position:absolute;
-      inset:0;
+      position:absolute; inset:0;
       display:flex; align-items:center; justify-content:center;
       color: color-mix(in srgb, var(--muted) 85%, transparent);
       font-weight:800;
-      text-transform: uppercase;
+      text-transform:uppercase;
       letter-spacing:.3px;
-      font-size: 12px;
+      font-size:12px;
       pointer-events:none;
       padding:10px;
       text-align:center;
     }
 
     .content{
-      padding: 12px;
+      padding:12px;
       display:flex;
       flex-direction:column;
-      gap: 10px;
+      gap:10px;
       flex:1;
-      min-width: 0;
+      min-width:0;
     }
 
-    .row{
-      display:flex; justify-content:space-between; align-items:flex-start;
-      gap:10px;
-      min-width: 0;
-    }
-    .name{ font-weight: 800; line-height:1.15; min-width:0; }
-    .price{ font-weight: 900; white-space:nowrap; }
-    .meta{ color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .row{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; min-width:0; }
+    .name{ font-weight:800; line-height:1.15; min-width:0; }
+    .price{ font-weight:900; white-space:nowrap; }
+    .meta{ color:var(--muted); font-size:12px; margin-top:2px; }
 
     .qty{
       display:flex; align-items:center; justify-content:space-between;
       gap:10px;
       margin-top:auto;
-      min-width: 0;
+      min-width:0;
     }
     .stepper{
       display:flex; align-items:center; gap:8px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 6px 8px;
-      min-width: 0;
+      background:var(--surface-2);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:6px 8px;
+      min-width:0;
     }
     .stepper button{
-      width: 30px; height: 30px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      font-size: 16px;
+      width:30px; height:30px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:var(--surface);
+      color:var(--text);
+      font-size:16px;
       cursor:pointer;
-      font-weight: 900;
+      font-weight:900;
     }
     .stepper span{
-      min-width: 26px;
+      min-width:26px;
       text-align:center;
-      font-weight: 900;
+      font-weight:900;
       letter-spacing:.2px;
     }
 
@@ -282,14 +255,14 @@
       z-index:20;
       background: color-mix(in srgb, var(--bg) 85%, transparent);
       backdrop-filter: blur(10px);
-      border-top: 1px solid var(--border);
+      border-top:1px solid var(--border);
     }
     .bottom .wrap{
       display:flex;
       gap:12px;
       align-items:center;
       justify-content:space-between;
-      padding: 12px 16px;
+      padding:12px 16px;
       flex-wrap:wrap;
     }
 
@@ -297,98 +270,93 @@
       display:flex;
       flex-direction:column;
       gap:4px;
-      min-width: 220px;
+      min-width:220px;
       flex: 1 1 220px;
     }
     .totals .line{
       display:flex;
       justify-content:space-between;
       gap:12px;
-      color: var(--muted);
-      font-size: 13px;
+      color:var(--muted);
+      font-size:13px;
     }
-    .totals .line strong{ color: var(--text); }
+    .totals .line strong{ color:var(--text); }
     .totals .grand{
       display:flex; justify-content:space-between; gap:12px;
-      font-size: 15px;
+      font-size:15px;
       margin-top:2px;
     }
-    .totals .grand strong{
-      font-size: 16px;
-      font-weight: 1000;
-    }
+    .totals .grand strong{ font-size:16px; font-weight:1000; }
 
     .bottom-actions{
       display:flex; gap:10px; align-items:center; flex-wrap:nowrap;
       justify-content:flex-end;
-      flex: 0 1 auto;
-      min-width: 0;
+      min-width:0;
     }
     @media (max-width: 420px){
-      .totals{ min-width: 0; width: 100%; }
-      .bottom-actions{ width: 100%; justify-content:space-between; }
+      .totals{ min-width:0; width:100%; }
+      .bottom-actions{ width:100%; justify-content:space-between; }
     }
 
     .badge{
       display:inline-flex; align-items:center; gap:6px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-weight: 800;
-      font-size: 12px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:var(--surface);
+      border:1px solid var(--border);
+      color:var(--text);
+      font-weight:800;
+      font-size:12px;
       white-space:nowrap;
-      box-shadow: var(--shadow);
+      box-shadow:var(--shadow);
     }
 
-    /* Checkout modal */
     .modal{
       position:fixed; inset:0; z-index:50;
       background: rgba(0,0,0,.45);
       display:none;
       align-items:flex-end;
       justify-content:center;
-      padding: 14px;
+      padding:14px;
     }
     html[data-theme="dark"] .modal{ background: rgba(0,0,0,.55); }
 
     .sheet{
-      width: min(760px, 100%);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
+      width:min(760px, 100%);
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:22px;
+      box-shadow:var(--shadow);
       overflow:hidden;
     }
     .sheet header{
       position:unset;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
+      background:var(--surface);
+      border-bottom:1px solid var(--border);
     }
-    .sheet .wrap{ padding: 12px 14px; }
-    .sheet h2{ margin:0; font-size: 16px; }
-    .sheet p{ margin:6px 0 0; color: var(--muted); font-size: 13px; }
+    .sheet .wrap{ padding:12px 14px; }
+    .sheet h2{ margin:0; font-size:16px; }
+    .sheet p{ margin:6px 0 0; color:var(--muted); font-size:13px; }
 
-    .sheet-body{ padding: 12px 14px 14px; }
+    .sheet-body{ padding:12px 14px 14px; }
     .orderbox{
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 10px 10px;
-      max-height: 40vh;
+      background:var(--surface-2);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:10px 10px;
+      max-height:40vh;
       overflow:auto;
-      font-size: 13px;
-      color: var(--text);
-      white-space: pre-wrap;
-      line-height: 1.35;
+      font-size:13px;
+      color:var(--text);
+      white-space:pre-wrap;
+      line-height:1.35;
     }
     .sheet-footer{
       display:flex; gap:10px; flex-wrap:wrap;
       justify-content:space-between; align-items:center;
-      margin-top: 12px;
+      margin-top:12px;
     }
-    .small{ color: var(--muted); font-size: 12px; }
+    .small{ color:var(--muted); font-size:12px; }
 
     button:focus, a:focus, input:focus{
       outline: 3px solid color-mix(in srgb, var(--brand) 35%, transparent);
@@ -399,7 +367,6 @@
 <body>
   <header>
     <div class="wrap brandbar">
-      <!-- 5,6) New header text (no process flow) -->
       <div class="title">
         <h1>Beavertail Mini-Mart Order</h1>
         <p class="subtitle">Thank you for shopping with us</p>
@@ -415,9 +382,6 @@
           <span id="themeLabel">☀️</span>
           <span class="dot"><span class="knob"></span></span>
         </div>
-
-        <!-- 3) Clear Cart -> Reset -->
-        <button class="btn btn-danger" id="resetCart">Reset</button>
       </div>
     </div>
   </header>
@@ -431,22 +395,22 @@
   <div class="bottom">
     <div class="wrap">
       <div class="totals">
-        <div class="line">
-          <span>Currency</span>
-          <strong>UGX</strong>
-        </div>
+        <!-- 3) Remove Currency line; add UGX on subtotal/total -->
         <div class="line">
           <span>Subtotal</span>
-          <strong id="subtotalText">0</strong>
+          <strong id="subtotalText">UGX 0</strong>
         </div>
         <div class="grand">
           <span><strong>Total</strong></span>
-          <strong id="totalText">0</strong>
+          <strong id="totalText">UGX 0</strong>
         </div>
       </div>
 
       <div class="bottom-actions">
         <span class="badge" id="itemsBadge">0 items</span>
+
+        <!-- 1) Reset next to Next -->
+        <button class="btn btn-danger" id="resetCart">Reset</button>
         <button class="btn" id="nextBtn">Next →</button>
       </div>
     </div>
@@ -483,7 +447,6 @@
     const WHATSAPP_NUMBER = "256772844881";
     const EMAIL_TO = "drxpatt@gmail.com";
 
-    // Put images inside an "images/" folder, and name them exactly like the "image" value below.
     const products = [
       { id: "p1",  name: "Rice (5kg)",           price: 45000, unit: "bag",    image: "rice-5kg.jpg" },
       { id: "p2",  name: "Sugar (1kg)",          price: 4500,  unit: "kg",     image: "sugar-1kg.jpg" },
@@ -499,7 +462,6 @@
       { id: "p12", name: "Beans (1kg)",          price: 5500,  unit: "kg",     image: "beans-1kg.jpg" }
     ];
 
-    // cart: { [productId]: qty }
     let cart = JSON.parse(localStorage.getItem("beavertail_cart") || "{}");
 
     const grid = document.getElementById("productGrid");
@@ -516,7 +478,6 @@
     const waBtn = document.getElementById("waBtn");
     const emailBtn = document.getElementById("emailBtn");
 
-    // Theme toggle
     const themeToggle = document.getElementById("themeToggle");
     const themeLabel = document.getElementById("themeLabel");
 
@@ -589,8 +550,8 @@
 
     function renderTotals(){
       const { subtotal, total, totalItems } = computeTotals();
-      subtotalText.textContent = formatUGX(subtotal);
-      totalText.textContent = formatUGX(total);
+      subtotalText.textContent = `UGX ${formatUGX(subtotal)}`;
+      totalText.textContent = `UGX ${formatUGX(total)}`;
       itemsBadge.textContent = `${totalItems} item${totalItems===1?"":"s"}`;
 
       nextBtn.disabled = (totalItems === 0);
@@ -633,9 +594,11 @@
       const nm = document.createElement("div");
       nm.className = "name";
       nm.textContent = p.name;
+
       const meta = document.createElement("div");
       meta.className = "meta";
       meta.textContent = `Per ${p.unit}`;
+
       left.appendChild(nm);
       left.appendChild(meta);
 
@@ -696,7 +659,6 @@
         .forEach(p => grid.appendChild(productCard(p)));
     }
 
-    // 4) Bold the title line for WhatsApp + Review page
     function buildOrderMessage(){
       const lines = [];
       lines.push("*Beavertail Mini-Mart Order*");
@@ -726,8 +688,6 @@
       if(totalItems === 0) return;
 
       const msg = buildOrderMessage();
-
-      // Review page: convert *text* to <strong>text</strong>
       orderPreview.innerHTML = msg.replace(/\*(.*?)\*/g, "<strong>$1</strong>");
 
       waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
@@ -736,11 +696,8 @@
       modal.style.display = "flex";
     }
 
-    function closeCheckout(){
-      modal.style.display = "none";
-    }
+    function closeCheckout(){ modal.style.display = "none"; }
 
-    // Events
     searchInput.addEventListener("input", (e) => renderProducts(e.target.value));
 
     resetCartBtn.addEventListener("click", () => {
@@ -754,7 +711,6 @@
     closeModal.addEventListener("click", closeCheckout);
     modal.addEventListener("click", (e) => { if(e.target === modal) closeCheckout(); });
 
-    // Init
     renderProducts("");
     renderTotals();
   </script>
