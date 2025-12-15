@@ -12,12 +12,21 @@
       --border:rgba(17,24,39,.12); --shadow:0 10px 22px rgba(17,24,39,.08);
       --brand:#2563eb; --danger:#dc2626; --ok:#059669;
       --radius:16px;
+
+      /* Added bar colors */
+      --barTop: linear-gradient(90deg, rgba(37,99,235,.18), rgba(5,150,105,.14));
+      --barBottom: linear-gradient(90deg, rgba(5,150,105,.14), rgba(37,99,235,.18));
+      --barBorder: rgba(37,99,235,.22);
     }
     html[data-theme="dark"]{
       --bg:#0b1220; --surface:#0f1730; --surface-2:#101a33;
       --text:#e9eefc; --muted:#a9b3d6;
       --border:rgba(255,255,255,.14); --shadow:0 14px 34px rgba(0,0,0,.35);
       --brand:#4f8cff; --danger:#ff5c7a; --ok:#2ee59d;
+
+      --barTop: linear-gradient(90deg, rgba(79,140,255,.22), rgba(46,229,157,.16));
+      --barBottom: linear-gradient(90deg, rgba(46,229,157,.16), rgba(79,140,255,.22));
+      --barBorder: rgba(79,140,255,.25);
     }
 
     *{ box-sizing:border-box; }
@@ -32,12 +41,14 @@
       touch-action:manipulation;
     }
 
-    /* 2) Fixed header (not scrollable) */
+    /* Fixed header with a bit of color */
     header{
       position:fixed; top:0; left:0; right:0; z-index:30;
-      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      background:
+        var(--barTop),
+        color-mix(in srgb, var(--bg) 88%, transparent);
       backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--barBorder);
     }
 
     .wrap{ max-width:1100px; margin:0 auto; padding:14px 16px; }
@@ -54,7 +65,7 @@
     h1{ margin:0; font-size:18px; letter-spacing:.2px; }
     .subtitle{ margin:0; color:var(--muted); font-size:12px; }
 
-    /* Search + toggle in one row, no wrapping */
+    /* Controls row (icons) */
     .controls{
       display:flex;
       gap:10px;
@@ -67,25 +78,19 @@
       max-width:100%;
     }
 
-    .pill{
-      display:flex; gap:8px; align-items:center;
-      background:var(--surface);
+    .iconbtn{
+      width: 42px; height: 42px;
+      border-radius: 12px;
       border:1px solid var(--border);
-      border-radius:999px;
-      padding:8px 10px;
-      box-shadow:var(--shadow);
-      flex:1 1 220px;
-      min-width:120px;
-      max-width:52vw;
-      overflow:hidden;
+      background:var(--surface);
+      color:var(--text);
+      box-shadow: var(--shadow);
+      cursor:pointer;
+      display:inline-flex; align-items:center; justify-content:center;
+      font-size: 18px;
+      flex:0 0 auto;
     }
-    .pill input{
-      border:none; outline:none; background:transparent; color:var(--text);
-      width:100%;
-      font-size:14px;
-      min-width:0;
-    }
-    .pill input::placeholder{ color: color-mix(in srgb, var(--muted) 70%, transparent); }
+    .iconbtn:active{ transform: translateY(1px); }
 
     .btn{
       border:none;
@@ -135,6 +140,7 @@
       color:var(--text);
       user-select:none;
       flex:0 0 auto;
+      height:42px;
     }
     .toggle .dot{
       width:36px; height:22px;
@@ -154,13 +160,14 @@
 
     @media (max-width: 640px){
       .wrap{ padding:12px 12px; }
-      .pill{ max-width:44vw; min-width:110px; padding:7px 9px; }
-      .btn, .toggle{ padding:9px 10px; }
       h1{ font-size:16px; }
+      .iconbtn{ width: 40px; height: 40px; }
+      .toggle{ height:40px; padding:9px 10px; }
+      .btn{ padding:9px 10px; }
     }
 
     /* push content below fixed header */
-    main{ padding: 86px 0 120px; } /* header height + bottom bar space */
+    main{ padding: 86px 0 140px; }
 
     .grid{
       display:grid;
@@ -179,8 +186,9 @@
       box-shadow:var(--shadow);
       display:flex;
       flex-direction:column;
-      min-height:260px;
+      min-height:270px;
       min-width:0;
+      position:relative;
     }
 
     .imgbox{
@@ -204,6 +212,26 @@
       text-align:center;
     }
 
+    /* Checkmark overlay (top-right) */
+    .check{
+      position:absolute;
+      top:10px; right:10px;
+      width: 28px; height: 28px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--surface) 80%, transparent);
+      border: 1px solid var(--border);
+      display:flex; align-items:center; justify-content:center;
+      font-weight: 1000;
+      cursor:pointer;
+      user-select:none;
+      box-shadow: var(--shadow);
+    }
+    .check[data-checked="true"]{
+      background: color-mix(in srgb, var(--ok) 20%, var(--surface));
+      border-color: color-mix(in srgb, var(--ok) 45%, transparent);
+      color: color-mix(in srgb, var(--ok) 85%, var(--text));
+    }
+
     .content{
       padding:12px;
       display:flex;
@@ -212,7 +240,6 @@
       flex:1;
       min-width:0;
     }
-
     .row{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; min-width:0; }
     .name{ font-weight:800; line-height:1.15; min-width:0; }
     .price{ font-weight:900; white-space:nowrap; }
@@ -249,13 +276,16 @@
       letter-spacing:.2px;
     }
 
+    /* Bottom bar with color */
     .bottom{
       position:fixed;
       left:0; right:0; bottom:0;
       z-index:20;
-      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      background:
+        var(--barBottom),
+        color-mix(in srgb, var(--bg) 88%, transparent);
       backdrop-filter: blur(10px);
-      border-top:1px solid var(--border);
+      border-top: 1px solid var(--barBorder);
     }
     .bottom .wrap{
       display:flex;
@@ -311,13 +341,14 @@
       box-shadow:var(--shadow);
     }
 
+    /* Search modal */
     .modal{
-      position:fixed; inset:0; z-index:50;
+      position:fixed; inset:0; z-index:60;
       background: rgba(0,0,0,.45);
       display:none;
       align-items:flex-end;
       justify-content:center;
-      padding:14px;
+      padding: 14px;
     }
     html[data-theme="dark"] .modal{ background: rgba(0,0,0,.55); }
 
@@ -339,6 +370,55 @@
     .sheet p{ margin:6px 0 0; color:var(--muted); font-size:13px; }
 
     .sheet-body{ padding:12px 14px 14px; }
+
+    .searchbox{
+      display:flex; gap:10px; align-items:center;
+      background: var(--surface-2);
+      border:1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+    .searchbox input{
+      border:none; outline:none; background:transparent; color:var(--text);
+      width:100%;
+      font-size:14px;
+      min-width:0;
+    }
+
+    .searchresults{
+      max-height: 45vh;
+      overflow:auto;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background: var(--surface);
+      padding: 6px;
+    }
+    .srow{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      padding: 10px 10px;
+      border-radius: 12px;
+      cursor:pointer;
+    }
+    .srow:hover{ background: color-mix(in srgb, var(--surface-2) 70%, transparent); }
+    .sname{ font-weight:800; }
+    .smeta{ color:var(--muted); font-size:12px; margin-top:2px; }
+    .sright{ display:flex; align-items:center; gap:10px; }
+    .tick{
+      width: 26px; height: 26px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      display:flex; align-items:center; justify-content:center;
+      font-weight: 1000;
+    }
+    .tick.on{
+      background: color-mix(in srgb, var(--ok) 20%, var(--surface));
+      border-color: color-mix(in srgb, var(--ok) 45%, transparent);
+      color: color-mix(in srgb, var(--ok) 85%, var(--text));
+    }
+
+    /* Checkout modal re-used */
     .orderbox{
       background:var(--surface-2);
       border:1px solid var(--border);
@@ -364,6 +444,7 @@
     }
   </style>
 </head>
+
 <body>
   <header>
     <div class="wrap brandbar">
@@ -373,10 +454,8 @@
       </div>
 
       <div class="controls">
-        <div class="pill" title="Search items">
-          <span style="opacity:.7">🔎</span>
-          <input id="search" type="text" placeholder="Search items…"/>
-        </div>
+        <!-- Search icon opens a search sheet -->
+        <button class="iconbtn" id="openSearch" title="Search & tick items" aria-label="Search & tick items">🔎</button>
 
         <div class="toggle" id="themeToggle" title="Toggle light/dark mode" role="button" tabindex="0">
           <span id="themeLabel">☀️</span>
@@ -395,7 +474,6 @@
   <div class="bottom">
     <div class="wrap">
       <div class="totals">
-        <!-- 3) Remove Currency line; add UGX on subtotal/total -->
         <div class="line">
           <span>Subtotal</span>
           <strong id="subtotalText">UGX 0</strong>
@@ -408,15 +486,46 @@
 
       <div class="bottom-actions">
         <span class="badge" id="itemsBadge">0 items</span>
-
-        <!-- 1) Reset next to Next -->
         <button class="btn btn-danger" id="resetCart">Reset</button>
         <button class="btn" id="nextBtn">Next →</button>
       </div>
     </div>
   </div>
 
-  <div class="modal" id="modal">
+  <!-- Search modal -->
+  <div class="modal" id="searchModal">
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="searchTitle">
+      <header>
+        <div class="wrap" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+          <div>
+            <h2 id="searchTitle">Search & tick items</h2>
+            <p>Type to search, then tap a row to tick/untick it.</p>
+          </div>
+          <button class="btn btn-ghost" id="closeSearch">Close</button>
+        </div>
+      </header>
+
+      <div class="sheet-body">
+        <div class="searchbox">
+          <span style="opacity:.7">🔎</span>
+          <input id="searchInputModal" type="text" placeholder="Search items…"/>
+        </div>
+
+        <div class="searchresults" id="searchResults"></div>
+
+        <div class="sheet-footer">
+          <div class="small">Ticking an item adds 1 to cart. Unticking removes it from cart.</div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+            <button class="btn btn-ghost" id="clearTicks">Clear ticks</button>
+            <button class="btn" id="doneSearch">Done</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout modal -->
+  <div class="modal" id="checkoutModal">
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
       <header>
         <div class="wrap" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
@@ -424,7 +533,7 @@
             <h2 id="checkoutTitle">Review your order</h2>
             <p>Thank you for shopping with us.</p>
           </div>
-          <button class="btn btn-ghost" id="closeModal">Close</button>
+          <button class="btn btn-ghost" id="closeCheckout">Close</button>
         </div>
       </header>
 
@@ -462,81 +571,83 @@
       { id: "p12", name: "Beans (1kg)",          price: 5500,  unit: "kg",     image: "beans-1kg.jpg" }
     ];
 
+    // cart: { [productId]: qty }
     let cart = JSON.parse(localStorage.getItem("beavertail_cart") || "{}");
 
+    // ===== Elements =====
     const grid = document.getElementById("productGrid");
-    const searchInput = document.getElementById("search");
     const subtotalText = document.getElementById("subtotalText");
     const totalText = document.getElementById("totalText");
     const itemsBadge = document.getElementById("itemsBadge");
-    const resetCartBtn = document.getElementById("resetCart");
 
-    const modal = document.getElementById("modal");
+    const resetCartBtn = document.getElementById("resetCart");
     const nextBtn = document.getElementById("nextBtn");
-    const closeModal = document.getElementById("closeModal");
+
+    // Theme
+    const themeToggle = document.getElementById("themeToggle");
+    const themeLabel = document.getElementById("themeLabel");
+
+    // Search modal
+    const openSearchBtn = document.getElementById("openSearch");
+    const searchModal = document.getElementById("searchModal");
+    const closeSearchBtn = document.getElementById("closeSearch");
+    const doneSearchBtn = document.getElementById("doneSearch");
+    const clearTicksBtn = document.getElementById("clearTicks");
+    const searchInputModal = document.getElementById("searchInputModal");
+    const searchResults = document.getElementById("searchResults");
+
+    // Checkout modal
+    const checkoutModal = document.getElementById("checkoutModal");
+    const closeCheckoutBtn = document.getElementById("closeCheckout");
     const orderPreview = document.getElementById("orderPreview");
     const waBtn = document.getElementById("waBtn");
     const emailBtn = document.getElementById("emailBtn");
 
-    const themeToggle = document.getElementById("themeToggle");
-    const themeLabel = document.getElementById("themeLabel");
-
+    // ===== Theme =====
     function applyTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
       themeLabel.textContent = (theme === "dark") ? "🌙" : "☀️";
       localStorage.setItem("beavertail_theme", theme);
     }
-
     (function initTheme(){
       const saved = localStorage.getItem("beavertail_theme");
-      if(saved){
-        applyTheme(saved);
-      } else {
+      if(saved) applyTheme(saved);
+      else{
         const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
         applyTheme(prefersDark ? "dark" : "light");
       }
     })();
-
     function toggleTheme(){
       const current = document.documentElement.getAttribute("data-theme") || "light";
       applyTheme(current === "dark" ? "light" : "dark");
     }
-
     themeToggle.addEventListener("click", toggleTheme);
     themeToggle.addEventListener("keydown", (e) => {
       if(e.key === "Enter" || e.key === " "){
-        e.preventDefault();
-        toggleTheme();
+        e.preventDefault(); toggleTheme();
       }
     });
 
-    function formatUGX(n){
-      return new Intl.NumberFormat("en-UG").format(n);
-    }
-
-    function saveCart(){
-      localStorage.setItem("beavertail_cart", JSON.stringify(cart));
-    }
-
-    function getQty(id){
-      return Number(cart[id] || 0);
-    }
+    // ===== Helpers =====
+    function formatUGX(n){ return new Intl.NumberFormat("en-UG").format(n); }
+    function saveCart(){ localStorage.setItem("beavertail_cart", JSON.stringify(cart)); }
+    function getQty(id){ return Number(cart[id] || 0); }
 
     function setQty(id, qty){
-      if(qty <= 0){
-        delete cart[id];
-      } else {
-        cart[id] = qty;
-      }
+      if(qty <= 0) delete cart[id];
+      else cart[id] = qty;
       saveCart();
       renderTotals();
+      // update qty label on card if present
       const el = document.querySelector(`[data-qty="${id}"]`);
       if(el) el.textContent = getQty(id);
+      // update check icon on card if present
+      const ck = document.querySelector(`[data-check="${id}"]`);
+      if(ck) ck.dataset.checked = (getQty(id) > 0) ? "true" : "false";
     }
 
     function computeTotals(){
-      let subtotal = 0;
-      let totalItems = 0;
+      let subtotal = 0, totalItems = 0;
       for(const p of products){
         const q = getQty(p.id);
         if(q > 0){
@@ -544,8 +655,7 @@
           totalItems += q;
         }
       }
-      const total = subtotal;
-      return { subtotal, total, totalItems };
+      return { subtotal, total: subtotal, totalItems };
     }
 
     function renderTotals(){
@@ -559,11 +669,26 @@
       nextBtn.style.cursor = (totalItems === 0) ? "not-allowed" : "pointer";
     }
 
+    // ===== Cards =====
     function productCard(p){
       const qty = getQty(p.id);
 
       const card = document.createElement("div");
       card.className = "card";
+
+      // checkmark toggle (tick/untick)
+      const check = document.createElement("div");
+      check.className = "check";
+      check.setAttribute("data-check", p.id);
+      check.dataset.checked = (qty > 0) ? "true" : "false";
+      check.textContent = "✓";
+      check.title = "Tick/Untick item (adds/removes 1)";
+      check.onclick = (e) => {
+        e.stopPropagation();
+        const isOn = getQty(p.id) > 0;
+        setQty(p.id, isOn ? 0 : 1);
+      };
+      card.appendChild(check);
 
       const imgbox = document.createElement("div");
       imgbox.className = "imgbox";
@@ -576,10 +701,7 @@
       fallback.className = "fallback";
       fallback.textContent = "Photo placeholder";
 
-      img.onerror = () => {
-        img.style.display = "none";
-        fallback.style.display = "flex";
-      };
+      img.onerror = () => { img.style.display = "none"; fallback.style.display = "flex"; };
 
       imgbox.appendChild(img);
       imgbox.appendChild(fallback);
@@ -650,15 +772,73 @@
       return card;
     }
 
-    function renderProducts(filterText=""){
+    function renderProducts(){
       grid.innerHTML = "";
-      const q = filterText.trim().toLowerCase();
+      products.forEach(p => grid.appendChild(productCard(p)));
+    }
+
+    // ===== Search & tick modal =====
+    function openSearch(){
+      searchModal.style.display = "flex";
+      searchInputModal.value = "";
+      renderSearchResults("");
+      setTimeout(() => searchInputModal.focus(), 0);
+    }
+    function closeSearch(){ searchModal.style.display = "none"; }
+
+    function renderSearchResults(filterText){
+      const q = (filterText || "").trim().toLowerCase();
+      searchResults.innerHTML = "";
 
       products
         .filter(p => !q || p.name.toLowerCase().includes(q))
-        .forEach(p => grid.appendChild(productCard(p)));
+        .forEach(p => {
+          const row = document.createElement("div");
+          row.className = "srow";
+
+          const left = document.createElement("div");
+          const nm = document.createElement("div");
+          nm.className = "sname";
+          nm.textContent = p.name;
+          const meta = document.createElement("div");
+          meta.className = "smeta";
+          meta.textContent = `UGX ${formatUGX(p.price)} • Per ${p.unit}`;
+          left.appendChild(nm);
+          left.appendChild(meta);
+
+          const right = document.createElement("div");
+          right.className = "sright";
+
+          const tick = document.createElement("div");
+          tick.className = "tick" + (getQty(p.id) > 0 ? " on" : "");
+          tick.textContent = "✓";
+
+          right.appendChild(tick);
+          row.appendChild(left);
+          row.appendChild(right);
+
+          row.onclick = () => {
+            const isOn = getQty(p.id) > 0;
+            setQty(p.id, isOn ? 0 : 1);
+
+            // update row tick
+            tick.className = "tick" + (getQty(p.id) > 0 ? " on" : "");
+          };
+
+          searchResults.appendChild(row);
+        });
     }
 
+    // Clear ticks = remove all items from cart
+    function clearTicks(){
+      cart = {};
+      saveCart();
+      renderTotals();
+      renderProducts();
+      renderSearchResults(searchInputModal.value);
+    }
+
+    // ===== Checkout =====
     function buildOrderMessage(){
       const lines = [];
       lines.push("*Beavertail Mini-Mart Order*");
@@ -679,7 +859,6 @@
       lines.push(`*TOTAL: UGX ${formatUGX(subtotal)}*`);
       lines.push("--------------------------------");
       lines.push("Delivery/Pickup: (reply with location & preferred time)");
-
       return lines.join("\n");
     }
 
@@ -688,30 +867,39 @@
       if(totalItems === 0) return;
 
       const msg = buildOrderMessage();
+
+      // Review page: show the bold title (and totals) via <strong>
       orderPreview.innerHTML = msg.replace(/\*(.*?)\*/g, "<strong>$1</strong>");
 
       waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
       emailBtn.href = `mailto:${EMAIL_TO}?subject=${encodeURIComponent("Beavertail Mini-mart Order")}&body=${encodeURIComponent(msg)}`;
 
-      modal.style.display = "flex";
+      checkoutModal.style.display = "flex";
     }
+    function closeCheckout(){ checkoutModal.style.display = "none"; }
 
-    function closeCheckout(){ modal.style.display = "none"; }
+    // ===== Events =====
+    openSearchBtn.addEventListener("click", openSearch);
+    closeSearchBtn.addEventListener("click", closeSearch);
+    doneSearchBtn.addEventListener("click", closeSearch);
+    clearTicksBtn.addEventListener("click", clearTicks);
 
-    searchInput.addEventListener("input", (e) => renderProducts(e.target.value));
+    searchInputModal.addEventListener("input", (e) => renderSearchResults(e.target.value));
+    searchModal.addEventListener("click", (e) => { if(e.target === searchModal) closeSearch(); });
 
     resetCartBtn.addEventListener("click", () => {
       cart = {};
       saveCart();
-      renderProducts(searchInput.value);
+      renderProducts();
       renderTotals();
     });
 
     nextBtn.addEventListener("click", openCheckout);
-    closeModal.addEventListener("click", closeCheckout);
-    modal.addEventListener("click", (e) => { if(e.target === modal) closeCheckout(); });
+    closeCheckoutBtn.addEventListener("click", closeCheckout);
+    checkoutModal.addEventListener("click", (e) => { if(e.target === checkoutModal) closeCheckout(); });
 
-    renderProducts("");
+    // Init
+    renderProducts();
     renderTotals();
   </script>
 </body>
