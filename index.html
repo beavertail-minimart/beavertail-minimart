@@ -13,7 +13,7 @@
       --brand:#2563eb; --danger:#dc2626; --ok:#059669;
       --radius:16px;
 
-      /* Colored top/bottom bars */
+      /* Bar colors */
       --barTop: linear-gradient(90deg, rgba(37,99,235,.18), rgba(5,150,105,.14));
       --barBottom: linear-gradient(90deg, rgba(5,150,105,.14), rgba(37,99,235,.18));
       --barBorder: rgba(37,99,235,.22);
@@ -41,7 +41,6 @@
       touch-action:manipulation;
     }
 
-    /* Fixed header */
     header{
       position:fixed; top:0; left:0; right:0; z-index:30;
       background:
@@ -59,13 +58,12 @@
     }
     .title{
       display:flex; flex-direction:column; gap:4px;
-      min-width:240px;
-      flex:1 1 260px;
+      min-width: 240px;
+      flex: 1 1 260px;
     }
     h1{ margin:0; font-size:18px; letter-spacing:.2px; }
     .subtitle{ margin:0; color:var(--muted); font-size:12px; }
 
-    /* Controls row */
     .controls{
       display:flex;
       gap:10px;
@@ -79,17 +77,16 @@
     }
 
     .iconbtn{
-      width:42px; height:42px;
-      border-radius:12px;
+      width: 42px; height: 42px;
+      border-radius: 12px;
       border:1px solid var(--border);
       background:var(--surface);
       color:var(--text);
       box-shadow: var(--shadow);
       cursor:pointer;
       display:inline-flex; align-items:center; justify-content:center;
-      font-size:18px;
+      font-size: 18px;
       flex:0 0 auto;
-      user-select:none;
     }
     .iconbtn:active{ transform: translateY(1px); }
 
@@ -162,12 +159,11 @@
     @media (max-width: 640px){
       .wrap{ padding:12px 12px; }
       h1{ font-size:16px; }
-      .iconbtn{ width:40px; height:40px; }
+      .iconbtn{ width: 40px; height: 40px; }
       .toggle{ height:40px; padding:9px 10px; }
       .btn{ padding:9px 10px; }
     }
 
-    /* Push content below fixed header + space for bottom bar */
     main{ padding: 86px 0 140px; }
 
     .grid{
@@ -196,30 +192,12 @@
       height:128px;
       background:var(--surface-2);
       border-bottom:1px solid var(--border);
-      display:flex; align-items:center; justify-content:center;
       position:relative;
     }
-    .imgbox img{ width:100%; height:100%; object-fit:cover; display:block; }
-
-    /* Checkmark overlay */
-    .check{
-      position:absolute;
-      top:10px; right:10px;
-      width:28px; height:28px;
-      border-radius:999px;
-      background: color-mix(in srgb, var(--surface) 80%, transparent);
-      border: 1px solid var(--border);
-      display:flex; align-items:center; justify-content:center;
-      font-weight:1000;
-      cursor:pointer;
-      user-select:none;
-      box-shadow: var(--shadow);
-      z-index:5;
-    }
-    .check[data-checked="true"]{
-      background: color-mix(in srgb, var(--ok) 20%, var(--surface));
-      border-color: color-mix(in srgb, var(--ok) 45%, transparent);
-      color: color-mix(in srgb, var(--ok) 85%, var(--text));
+    .imgbox img{
+      width:100%; height:100%;
+      object-fit:cover;
+      display:block;
     }
 
     .content{
@@ -266,7 +244,6 @@
       letter-spacing:.2px;
     }
 
-    /* Bottom bar */
     .bottom{
       position:fixed;
       left:0; right:0; bottom:0;
@@ -338,7 +315,7 @@
       display:none;
       align-items:flex-end;
       justify-content:center;
-      padding:14px;
+      padding: 14px;
     }
     html[data-theme="dark"] .modal{ background: rgba(0,0,0,.55); }
 
@@ -358,7 +335,6 @@
     .sheet .wrap{ padding:12px 14px; }
     .sheet h2{ margin:0; font-size:16px; }
     .sheet p{ margin:6px 0 0; color:var(--muted); font-size:13px; }
-
     .sheet-body{ padding:12px 14px 14px; }
 
     .searchbox{
@@ -374,38 +350,6 @@
       width:100%;
       font-size:14px;
       min-width:0;
-    }
-
-    .searchresults{
-      max-height: 45vh;
-      overflow:auto;
-      border:1px solid var(--border);
-      border-radius:14px;
-      background: var(--surface);
-      padding: 6px;
-    }
-    .srow{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px;
-      padding: 10px 10px;
-      border-radius: 12px;
-      cursor:pointer;
-    }
-    .srow:hover{ background: color-mix(in srgb, var(--surface-2) 70%, transparent); }
-    .sname{ font-weight:800; }
-    .smeta{ color:var(--muted); font-size:12px; margin-top:2px; }
-    .sright{ display:flex; align-items:center; gap:10px; }
-    .tick{
-      width:26px; height:26px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      display:flex; align-items:center; justify-content:center;
-      font-weight:1000;
-    }
-    .tick.on{
-      background: color-mix(in srgb, var(--ok) 20%, var(--surface));
-      border-color: color-mix(in srgb, var(--ok) 45%, transparent);
-      color: color-mix(in srgb, var(--ok) 85%, var(--text));
     }
 
     .orderbox{
@@ -443,7 +387,7 @@
       </div>
 
       <div class="controls">
-        <button class="iconbtn" id="openSearch" title="Search & tick items" aria-label="Search & tick items">🔎</button>
+        <button class="iconbtn" id="openSearch" title="Search items" aria-label="Search items">🔎</button>
 
         <div class="toggle" id="themeToggle" title="Toggle light/dark mode" role="button" tabindex="0">
           <span id="themeLabel">☀️</span>
@@ -480,14 +424,14 @@
     </div>
   </div>
 
-  <!-- Search modal -->
+  <!-- Search modal (no ticking; filters products like before) -->
   <div class="modal" id="searchModal">
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="searchTitle">
       <header>
         <div class="wrap" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
           <div>
-            <h2 id="searchTitle">Search & tick items</h2>
-            <p>Type to search, then tap a row to tick/untick it.</p>
+            <h2 id="searchTitle">Search items</h2>
+            <p>Type to filter the product list.</p>
           </div>
           <button class="btn btn-ghost" id="closeSearch">Close</button>
         </div>
@@ -499,14 +443,10 @@
           <input id="searchInputModal" type="text" placeholder="Search items…"/>
         </div>
 
-        <div class="searchresults" id="searchResults"></div>
+        <div class="small">Results update on the main page as you type.</div>
 
-        <div class="sheet-footer">
-          <div class="small">Ticking an item adds 1 to cart. Unticking removes it from cart.</div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
-            <button class="btn btn-ghost" id="clearTicks">Clear ticks</button>
-            <button class="btn" id="doneSearch">Done</button>
-          </div>
+        <div class="sheet-footer" style="justify-content:flex-end;">
+          <button class="btn" id="doneSearch">Done</button>
         </div>
       </div>
     </div>
@@ -540,11 +480,9 @@
   </div>
 
   <script>
-    // ====== CONFIG ======
     const WHATSAPP_NUMBER = "256772844881";
     const EMAIL_TO = "drxpatt@gmail.com";
 
-    // Put images inside an "images/" folder, and name them exactly like the "image" value below.
     const products = [
       { id: "p1",  name: "Rice (5kg)",           price: 45000, unit: "bag",    image: "rice-5kg.jpg" },
       { id: "p2",  name: "Sugar (1kg)",          price: 4500,  unit: "kg",     image: "sugar-1kg.jpg" },
@@ -560,10 +498,8 @@
       { id: "p12", name: "Beans (1kg)",          price: 5500,  unit: "kg",     image: "beans-1kg.jpg" }
     ];
 
-    // cart: { [productId]: qty }
     let cart = JSON.parse(localStorage.getItem("beavertail_cart") || "{}");
 
-    // ===== Elements =====
     const grid = document.getElementById("productGrid");
     const subtotalText = document.getElementById("subtotalText");
     const totalText = document.getElementById("totalText");
@@ -572,92 +508,62 @@
     const resetCartBtn = document.getElementById("resetCart");
     const nextBtn = document.getElementById("nextBtn");
 
-    // Theme
     const themeToggle = document.getElementById("themeToggle");
     const themeLabel = document.getElementById("themeLabel");
 
-    // Search modal
     const openSearchBtn = document.getElementById("openSearch");
     const searchModal = document.getElementById("searchModal");
     const closeSearchBtn = document.getElementById("closeSearch");
     const doneSearchBtn = document.getElementById("doneSearch");
-    const clearTicksBtn = document.getElementById("clearTicks");
     const searchInputModal = document.getElementById("searchInputModal");
-    const searchResults = document.getElementById("searchResults");
 
-    // Checkout modal
     const checkoutModal = document.getElementById("checkoutModal");
     const closeCheckoutBtn = document.getElementById("closeCheckout");
     const orderPreview = document.getElementById("orderPreview");
     const waBtn = document.getElementById("waBtn");
     const emailBtn = document.getElementById("emailBtn");
 
-    // ===== Theme =====
     function applyTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
       themeLabel.textContent = (theme === "dark") ? "🌙" : "☀️";
       localStorage.setItem("beavertail_theme", theme);
     }
-
     (function initTheme(){
       const saved = localStorage.getItem("beavertail_theme");
-      if(saved){
-        applyTheme(saved);
-      } else {
+      if(saved) applyTheme(saved);
+      else{
         const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
         applyTheme(prefersDark ? "dark" : "light");
       }
     })();
-
     function toggleTheme(){
       const current = document.documentElement.getAttribute("data-theme") || "light";
       applyTheme(current === "dark" ? "light" : "dark");
     }
-
     themeToggle.addEventListener("click", toggleTheme);
     themeToggle.addEventListener("keydown", (e) => {
       if(e.key === "Enter" || e.key === " "){
-        e.preventDefault();
-        toggleTheme();
+        e.preventDefault(); toggleTheme();
       }
     });
 
-    // ===== Helpers =====
-    function formatUGX(n){
-      return new Intl.NumberFormat("en-UG").format(n);
-    }
-
-    function saveCart(){
-      localStorage.setItem("beavertail_cart", JSON.stringify(cart));
-    }
-
-    function getQty(id){
-      return Number(cart[id] || 0);
-    }
+    function formatUGX(n){ return new Intl.NumberFormat("en-UG").format(n); }
+    function saveCart(){ localStorage.setItem("beavertail_cart", JSON.stringify(cart)); }
+    function getQty(id){ return Number(cart[id] || 0); }
 
     function setQty(id, qty){
-      if(qty <= 0){
-        delete cart[id];
-      } else {
-        cart[id] = qty;
-      }
+      if(qty <= 0) delete cart[id];
+      else cart[id] = qty;
 
       saveCart();
       renderTotals();
 
-      // Update qty on card
       const el = document.querySelector(`[data-qty="${id}"]`);
       if(el) el.textContent = getQty(id);
-
-      // Update check on card
-      const ck = document.querySelector(`[data-check="${id}"]`);
-      if(ck) ck.dataset.checked = (getQty(id) > 0) ? "true" : "false";
     }
 
     function computeTotals(){
-      let subtotal = 0;
-      let totalItems = 0;
-
+      let subtotal = 0, totalItems = 0;
       for(const p of products){
         const q = getQty(p.id);
         if(q > 0){
@@ -665,13 +571,11 @@
           totalItems += q;
         }
       }
-
       return { subtotal, total: subtotal, totalItems };
     }
 
     function renderTotals(){
       const { subtotal, total, totalItems } = computeTotals();
-
       subtotalText.textContent = `UGX ${formatUGX(subtotal)}`;
       totalText.textContent = `UGX ${formatUGX(total)}`;
       itemsBadge.textContent = `${totalItems} item${totalItems===1?"":"s"}`;
@@ -681,38 +585,19 @@
       nextBtn.style.cursor = (totalItems === 0) ? "not-allowed" : "pointer";
     }
 
-    // ===== Cards =====
     function productCard(p){
       const qty = getQty(p.id);
 
       const card = document.createElement("div");
       card.className = "card";
 
-      // Checkmark (tick/untick)
-      const check = document.createElement("div");
-      check.className = "check";
-      check.setAttribute("data-check", p.id);
-      check.dataset.checked = (qty > 0) ? "true" : "false";
-      check.textContent = "✓";
-      check.title = "Tick/Untick item (adds/removes 1)";
-      check.onclick = (e) => {
-        e.stopPropagation();
-        const isOn = getQty(p.id) > 0;
-        setQty(p.id, isOn ? 0 : 1);
-      };
-      card.appendChild(check);
-
-      // Image area (NO placeholder text)
       const imgbox = document.createElement("div");
       imgbox.className = "imgbox";
 
       const img = document.createElement("img");
       img.alt = p.name;
       img.src = `images/${p.image}`;
-
-      // If image missing, keep area clean
-      img.onerror = () => { img.style.display = "none"; };
-
+      img.onerror = () => { img.style.display = "none"; }; // leave empty area if missing
       imgbox.appendChild(img);
 
       const content = document.createElement("div");
@@ -722,7 +607,6 @@
       top.className = "row";
 
       const left = document.createElement("div");
-
       const nm = document.createElement("div");
       nm.className = "name";
       nm.textContent = p.name;
@@ -782,82 +666,26 @@
       return card;
     }
 
-    function renderProducts(){
+    function renderProducts(filterText=""){
       grid.innerHTML = "";
-      products.forEach(p => grid.appendChild(productCard(p)));
+      const q = (filterText || "").trim().toLowerCase();
+      products
+        .filter(p => !q || p.name.toLowerCase().includes(q))
+        .forEach(p => grid.appendChild(productCard(p)));
     }
 
-    // ===== Search & tick modal =====
     function openSearch(){
       searchModal.style.display = "flex";
       searchInputModal.value = "";
-      renderSearchResults("");
+      renderProducts("");
       setTimeout(() => searchInputModal.focus(), 0);
     }
+    function closeSearch(){ searchModal.style.display = "none"; }
 
-    function closeSearch(){
-      searchModal.style.display = "none";
-    }
-
-    function renderSearchResults(filterText){
-      const q = (filterText || "").trim().toLowerCase();
-      searchResults.innerHTML = "";
-
-      products
-        .filter(p => !q || p.name.toLowerCase().includes(q))
-        .forEach(p => {
-          const row = document.createElement("div");
-          row.className = "srow";
-
-          const left = document.createElement("div");
-
-          const nm = document.createElement("div");
-          nm.className = "sname";
-          nm.textContent = p.name;
-
-          const meta = document.createElement("div");
-          meta.className = "smeta";
-          meta.textContent = `UGX ${formatUGX(p.price)} • Per ${p.unit}`;
-
-          left.appendChild(nm);
-          left.appendChild(meta);
-
-          const right = document.createElement("div");
-          right.className = "sright";
-
-          const tick = document.createElement("div");
-          tick.className = "tick" + (getQty(p.id) > 0 ? " on" : "");
-          tick.textContent = "✓";
-
-          right.appendChild(tick);
-
-          row.appendChild(left);
-          row.appendChild(right);
-
-          row.onclick = () => {
-            const isOn = getQty(p.id) > 0;
-            setQty(p.id, isOn ? 0 : 1);
-            tick.className = "tick" + (getQty(p.id) > 0 ? " on" : "");
-          };
-
-          searchResults.appendChild(row);
-        });
-    }
-
-    function clearTicks(){
-      cart = {};
-      saveCart();
-      renderTotals();
-      renderProducts();
-      renderSearchResults(searchInputModal.value);
-    }
-
-    // ===== Checkout =====
     function buildOrderMessage(){
       const lines = [];
       lines.push("*Beavertail Mini-Mart Order*");
       lines.push("--------------------------------");
-
       let subtotal = 0;
 
       for(const p of products){
@@ -874,7 +702,6 @@
       lines.push(`*TOTAL: UGX ${formatUGX(subtotal)}*`);
       lines.push("--------------------------------");
       lines.push("Delivery/Pickup: (reply with location & preferred time)");
-
       return lines.join("\n");
     }
 
@@ -883,8 +710,6 @@
       if(totalItems === 0) return;
 
       const msg = buildOrderMessage();
-
-      // Review page: render WhatsApp-style bold via <strong>
       orderPreview.innerHTML = msg.replace(/\*(.*?)\*/g, "<strong>$1</strong>");
 
       waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
@@ -892,24 +717,22 @@
 
       checkoutModal.style.display = "flex";
     }
+    function closeCheckout(){ checkoutModal.style.display = "none"; }
 
-    function closeCheckout(){
-      checkoutModal.style.display = "none";
-    }
-
-    // ===== Events =====
+    // Events
     openSearchBtn.addEventListener("click", openSearch);
     closeSearchBtn.addEventListener("click", closeSearch);
     doneSearchBtn.addEventListener("click", closeSearch);
-    clearTicksBtn.addEventListener("click", clearTicks);
-
-    searchInputModal.addEventListener("input", (e) => renderSearchResults(e.target.value));
     searchModal.addEventListener("click", (e) => { if(e.target === searchModal) closeSearch(); });
+
+    searchInputModal.addEventListener("input", (e) => {
+      renderProducts(e.target.value);
+    });
 
     resetCartBtn.addEventListener("click", () => {
       cart = {};
       saveCart();
-      renderProducts();
+      renderProducts(searchInputModal.value || "");
       renderTotals();
     });
 
@@ -918,7 +741,7 @@
     checkoutModal.addEventListener("click", (e) => { if(e.target === checkoutModal) closeCheckout(); });
 
     // Init
-    renderProducts();
+    renderProducts("");
     renderTotals();
   </script>
 </body>
