@@ -730,11 +730,20 @@
     });
 
     resetCartBtn.addEventListener("click", () => {
-      cart = {};
-      saveCart();
-      renderProducts(searchInputModal.value || "");
-      renderTotals();
-    });
+  cart = {};
+  saveCart();
+
+  // Clear search
+  searchInputModal.value = "";
+  closeSearch();              // optional: closes search modal if open
+
+  // Show all products again
+  renderProducts("");
+
+  // Reset totals
+  renderTotals();
+});
+
 
     nextBtn.addEventListener("click", openCheckout);
     closeCheckoutBtn.addEventListener("click", closeCheckout);
