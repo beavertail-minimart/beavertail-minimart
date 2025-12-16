@@ -386,6 +386,16 @@
       filter:none;
     }
 
+    /* New: Edit cart button (works well on black bottom bar) */
+    .btn-edit{
+      background: rgba(255,255,255,.10);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow: 0 10px 18px rgba(0,0,0,.22);
+      padding:12px 14px;
+    }
+    .btn-edit:hover{ filter: brightness(1.10); }
+
     /* Modals */
     .modal{
       position:fixed; inset:0; z-index:60;
@@ -490,6 +500,75 @@
     }
     .small{ color:var(--muted); font-size:12px; }
 
+    /* New: Cart editor list */
+    .cartList{
+      background: var(--surface-2);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding: 10px;
+      max-height: 42vh;
+      overflow:auto;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .cartRow{
+      background: var(--surface);
+      border:1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      min-width:0;
+    }
+    .cartLeft{ min-width:0; flex:1 1 auto; }
+    .cartName{ font-weight:1100; line-height:1.2; }
+    .cartMeta{ color:var(--muted); font-size:12px; margin-top:4px; }
+
+    .cartControls{
+      display:flex; align-items:center; gap:8px;
+      flex:0 0 auto;
+    }
+    .miniBtn{
+      width:40px; height:40px;
+      border-radius: 12px;
+      border:1px solid var(--border);
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+      color: var(--text);
+      font-weight:1100;
+      font-size:20px;
+      cursor:pointer;
+      box-shadow: var(--shadow);
+    }
+    .miniBtn:active{ transform: translateY(1px); }
+    .qtyInput{
+      width:64px;
+      height:40px;
+      border-radius: 12px;
+      border:1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      text-align:center;
+      font-weight:1100;
+      outline:none;
+      box-shadow: var(--shadow);
+    }
+    .cartSummary{
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      gap:12px;
+      margin-top:10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+    }
+    .cartSummary .label{ font-weight:1100; }
+    .cartSummary .val{ font-weight:1100; font-size:18px; }
+
     button:focus, a:focus, input:focus, textarea:focus{
       outline: 3px solid color-mix(in srgb, var(--blue) 35%, transparent);
       outline-offset: 2px;
@@ -533,6 +612,7 @@
 
       <div class="bottom-actions">
         <span class="badge" id="itemsBadge">0 items</span>
+        <button class="btn btn-edit" id="editCartBtn" title="Edit your cart">🛒 EDIT</button>
         <button class="btn btn-reset" id="resetCart">RESET</button>
         <button class="btn btn-next" id="nextBtn">NEXT →</button>
       </div>
@@ -562,6 +642,35 @@
 
         <div class="sheet-footer" style="justify-content:flex-end;">
           <button class="btn btn-next" id="doneSearch">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW: Cart editor modal -->
+  <div class="modal" id="cartModal">
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+      <header>
+        <div class="wrap" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+          <div>
+            <h2 id="cartTitle">Edit your cart</h2>
+            <p>Adjust quantities, tap OK, then proceed to NEXT.</p>
+          </div>
+          <button class="btn" id="closeCart" style="background:var(--surface); color:var(--text); border:1px solid var(--border); font-weight:1000;">Close</button>
+        </div>
+      </header>
+
+      <div class="sheet-body">
+        <div class="cartList" id="cartList"></div>
+
+        <div class="cartSummary">
+          <span class="label">Cart total</span>
+          <span class="val" id="cartTotalText">UGX 0</span>
+        </div>
+
+        <div class="sheet-footer" style="justify-content:space-between;">
+          <button class="btn btn-reset" id="clearCartInModal">Clear cart</button>
+          <button class="btn btn-next" id="okCart">OK</button>
         </div>
       </div>
     </div>
@@ -658,6 +767,15 @@
     const doneSearchBtn = document.getElementById("doneSearch");
     const searchInputModal = document.getElementById("searchInputModal");
 
+    // NEW: Cart editor modal
+    const editCartBtn = document.getElementById("editCartBtn");
+    const cartModal = document.getElementById("cartModal");
+    const closeCartBtn = document.getElementById("closeCart");
+    const okCartBtn = document.getElementById("okCart");
+    const cartListEl = document.getElementById("cartList");
+    const cartTotalText = document.getElementById("cartTotalText");
+    const clearCartInModalBtn = document.getElementById("clearCartInModal");
+
     // Checkout modal
     const checkoutModal = document.getElementById("checkoutModal");
     const closeCheckoutBtn = document.getElementById("closeCheckout");
@@ -704,6 +822,8 @@
     function getQty(id){ return Number(cart[id] || 0); }
 
     function setQty(id, qty){
+      qty = Number.isFinite(qty) ? Math.max(0, Math.floor(qty)) : 0;
+
       if(qty <= 0) delete cart[id];
       else cart[id] = qty;
 
@@ -715,6 +835,11 @@
 
       const card = document.querySelector(`[data-card="${id}"]`);
       if(card) card.classList.toggle("selected", getQty(id) > 0);
+
+      // If cart editor is open, keep it in sync
+      if(cartModal.style.display === "flex"){
+        renderCartEditor();
+      }
 
       refreshCheckoutMessage();
     }
@@ -735,7 +860,6 @@
       const { total, totalItems } = computeTotals();
       totalText.textContent = `UGX ${formatUGX(total)}`;
       itemsBadge.textContent = `${totalItems} item${totalItems===1?"":"s"}`;
-
       nextBtn.disabled = (totalItems === 0);
     }
 
@@ -826,6 +950,90 @@
       setTimeout(() => searchInputModal.focus(), 0);
     }
     function closeSearch(){ searchModal.style.display = "none"; }
+
+    // NEW: Cart editor modal
+    function openCartEditor(){
+      cartModal.style.display = "flex";
+      renderCartEditor();
+    }
+    function closeCartEditor(){ cartModal.style.display = "none"; }
+
+    function renderCartEditor(){
+      cartListEl.innerHTML = "";
+
+      const picked = products.filter(p => getQty(p.id) > 0);
+
+      if(picked.length === 0){
+        const empty = document.createElement("div");
+        empty.style.padding = "14px";
+        empty.style.color = "var(--muted)";
+        empty.style.textAlign = "center";
+        empty.textContent = "Your cart is empty. Add items on the main page.";
+        cartListEl.appendChild(empty);
+        cartTotalText.textContent = "UGX 0";
+        return;
+      }
+
+      for(const p of picked){
+        const row = document.createElement("div");
+        row.className = "cartRow";
+
+        const left = document.createElement("div");
+        left.className = "cartLeft";
+
+        const nm = document.createElement("div");
+        nm.className = "cartName";
+        nm.textContent = p.name;
+
+        const meta = document.createElement("div");
+        meta.className = "cartMeta";
+        meta.textContent = `UGX ${formatUGX(p.price)} per ${p.unit}`;
+
+        left.appendChild(nm);
+        left.appendChild(meta);
+
+        const controls = document.createElement("div");
+        controls.className = "cartControls";
+
+        const minus = document.createElement("button");
+        minus.className = "miniBtn";
+        minus.textContent = "−";
+        minus.title = "Reduce quantity";
+        minus.onclick = () => setQty(p.id, getQty(p.id) - 1);
+
+        const input = document.createElement("input");
+        input.className = "qtyInput";
+        input.type = "number";
+        input.min = "0";
+        input.step = "1";
+        input.value = String(getQty(p.id));
+        input.setAttribute("inputmode", "numeric");
+        input.setAttribute("aria-label", `Quantity for ${p.name}`);
+
+        input.addEventListener("change", () => {
+          const val = parseInt(input.value || "0", 10);
+          setQty(p.id, Number.isFinite(val) ? val : 0);
+        });
+
+        const plus = document.createElement("button");
+        plus.className = "miniBtn";
+        plus.textContent = "+";
+        plus.title = "Increase quantity";
+        plus.onclick = () => setQty(p.id, getQty(p.id) + 1);
+
+        controls.appendChild(minus);
+        controls.appendChild(input);
+        controls.appendChild(plus);
+
+        row.appendChild(left);
+        row.appendChild(controls);
+
+        cartListEl.appendChild(row);
+      }
+
+      const { total } = computeTotals();
+      cartTotalText.textContent = `UGX ${formatUGX(total)}`;
+    }
 
     // Checkout: fulfillment + message
     function getFulfillmentDetails(subtotal){
@@ -926,12 +1134,30 @@
 
     searchInputModal.addEventListener("input", (e) => renderProducts(e.target.value));
 
+    // NEW: Cart editor events
+    editCartBtn.addEventListener("click", openCartEditor);
+    closeCartBtn.addEventListener("click", closeCartEditor);
+    okCartBtn.addEventListener("click", closeCartEditor);
+    cartModal.addEventListener("click", (e) => { if(e.target === cartModal) closeCartEditor(); });
+
+    clearCartInModalBtn.addEventListener("click", () => {
+      cart = {};
+      saveCart();
+      renderTotals();
+      renderCartEditor();    // keep modal updated
+      refreshCheckoutMessage();
+
+      // also refresh visible cards if any
+      renderProducts(searchInputModal.value || "");
+    });
+
     resetCartBtn.addEventListener("click", () => {
       cart = {};
       saveCart();
 
       searchInputModal.value = "";
       closeSearch();
+      closeCartEditor();
       renderProducts("");
 
       renderTotals();
